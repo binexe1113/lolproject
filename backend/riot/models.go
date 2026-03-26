@@ -24,11 +24,15 @@ type MatchDto struct {
 		GameCreation  int64             `json:"gameCreation"`
 		GameDuration  int64             `json:"gameDuration"`
 		GameMode      string            `json:"gameMode"`
+<<<<<<< HEAD
 		QueueId       int               `json:"queueId"`
+=======
+>>>>>>> origin/master
 		Participants  []ParticipantDto  `json:"participants"`
 	} `json:"info"`
 }
 
+<<<<<<< HEAD
 type LeagueEntryDto struct {
 	SummonerId   string `json:"summonerId"`
 	QueueType    string `json:"queueType"`
@@ -48,6 +52,8 @@ type LeagueListDto struct {
 	Entries []LeagueItemDto `json:"entries"`
 }
 
+=======
+>>>>>>> origin/master
 type ParticipantDto struct {
 	Puuid           string `json:"puuid"`
 	RiotIdGameName  string `json:"riotIdGameName"`
@@ -66,8 +72,12 @@ type ParticipantDto struct {
 	Item5           int    `json:"item5"`
 	Item6           int    `json:"item6"`
 	TotalDamageDealtToChampions int `json:"totalDamageDealtToChampions"`
+<<<<<<< HEAD
 	TotalDamageTaken            int `json:"totalDamageTaken"`
 	GoldEarned                  int `json:"goldEarned"`
 	TotalMinionsKilled          int `json:"totalMinionsKilled"`
 	VisionScore                 int `json:"visionScore"`
+=======
+	VisionScore     int    `json:"visionScore"`
+>>>>>>> origin/master
 }

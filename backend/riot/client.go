@@ -4,7 +4,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+<<<<<<< HEAD
 	"strings"
+=======
+>>>>>>> origin/master
 	"time"
 )
 
@@ -135,6 +138,7 @@ func (c *Client) GetMatch(cluster string, matchId string) (*MatchDto, error) {
 
 	return &match, nil
 }
+<<<<<<< HEAD
 
 func (c *Client) GetLeagueEntries(platform string, puuid string) ([]LeagueEntryDto, error) {
 	url := fmt.Sprintf("https://%s.api.riotgames.com/lol/league/v4/entries/by-puuid/%s", platform, puuid)
@@ -241,3 +245,5 @@ func (c *Client) GetApexLadderPosition(platform, tier, queueType string, leagueP
 
 	return offset + inTierPosition
 }
+=======
+>>>>>>> origin/master

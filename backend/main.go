@@ -70,6 +70,7 @@ func main() {
 			return
 		}
 
+<<<<<<< HEAD
 		league, _ := riotClient.GetLeagueEntries(platform, account.Puuid)
 
 		// For apex tiers, compute the real ladder position by fetching the full league list
@@ -87,6 +88,11 @@ func main() {
 			"summoner":       summoner,
 			"league":         league,
 			"ladderPosition": ladderPosition,
+=======
+		c.JSON(http.StatusOK, gin.H{
+			"account":  account,
+			"summoner": summoner,
+>>>>>>> origin/master
 		})
 	})
 

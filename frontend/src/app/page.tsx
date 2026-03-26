@@ -55,14 +55,22 @@ export default function Home() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[calc(100vh-12rem)] px-4 relative">
+<<<<<<< HEAD
       <motion.div
+=======
+      <motion.div 
+>>>>>>> origin/master
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
         className="w-full max-w-5xl flex flex-col items-center text-center space-y-16 z-10"
       >
         <div className="space-y-8 relative">
+<<<<<<< HEAD
           <motion.div
+=======
+          <motion.div 
+>>>>>>> origin/master
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2 }}
@@ -80,16 +88,27 @@ export default function Home() {
             <span className="text-gradient">The Meta.</span>
           </h1>
           <p className="text-xl md:text-2xl text-zinc-400 max-w-3xl mx-auto font-light">
+<<<<<<< HEAD
             Não jogue no escuro. Receba insights agressivos e métricas absolutas para destruir o Nexus inimigo.
+=======
+            Não jogue no escuro. Receba insights agressivos e métricas absolutas para destruir o Nexus inimigo. 
+>>>>>>> origin/master
           </p>
         </div>
 
         <form onSubmit={handleSearch} className="w-full max-w-4xl relative group">
           <div className="absolute -inset-2 bg-[#CCFF00]/20 blur-2xl rounded-sm opacity-0 group-hover:opacity-100 transition duration-500"></div>
+<<<<<<< HEAD
 
           <div className="relative flex flex-col md:flex-row items-center bg-[#07070A] border-2 border-white/5 p-2 gap-2 shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
             <div className="w-full md:w-auto">
               <select
+=======
+          
+          <div className="relative flex flex-col md:flex-row items-center bg-[#07070A] border-2 border-white/5 p-2 gap-2 shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
+            <div className="w-full md:w-auto">
+              <select 
+>>>>>>> origin/master
                 className="w-full md:w-32 bg-[#101015] text-[#CCFF00] py-5 px-6 font-bold text-lg outline-none hover:bg-[#1A1A24] transition-colors cursor-pointer appearance-none border-r border-white/5 uppercase tracking-wider"
                 value={region}
                 onChange={(e) => setRegion(e.target.value)}
@@ -100,7 +119,11 @@ export default function Home() {
                 <option value="kr">KR</option>
               </select>
             </div>
+<<<<<<< HEAD
 
+=======
+            
+>>>>>>> origin/master
             <input
               type="text"
               placeholder="RIOT ID#TAG"
@@ -108,8 +131,13 @@ export default function Home() {
               onChange={(e) => setRiotId(e.target.value)}
               className="flex-1 w-full bg-transparent py-5 px-8 text-3xl outline-none placeholder:text-zinc-700 font-bold text-white uppercase tracking-wider"
             />
+<<<<<<< HEAD
 
             <button
+=======
+            
+            <button 
+>>>>>>> origin/master
               type="submit"
               className="w-full md:w-auto px-12 py-5 bg-[#CCFF00] text-black font-black text-xl hover:bg-white flex items-center justify-center gap-4 transition-all uppercase tracking-[0.2em]"
             >
@@ -118,10 +146,17 @@ export default function Home() {
             </button>
           </div>
         </form>
+<<<<<<< HEAD
 
         <div className="flex flex-wrap justify-center items-center gap-6 text-xs font-bold text-zinc-600 uppercase tracking-widest pt-8">
           <span>Targets:</span>
           <button type="button" onClick={() => { setRiotId("Hide on bush #kr1"); setRegion("kr"); }} className="text-white hover:text-[#CCFF00] transition-colors">HIDE ON BUSH #KR1</button>
+=======
+        
+        <div className="flex flex-wrap justify-center items-center gap-6 text-xs font-bold text-zinc-600 uppercase tracking-widest pt-8">
+          <span>Targets:</span>
+          <button type="button" onClick={() => { setRiotId("Faker#KR1"); setRegion("kr"); }} className="text-white hover:text-[#CCFF00] transition-colors">FAKER#KR1</button>
+>>>>>>> origin/master
           <span className="w-1 h-1 bg-[#CCFF00]"></span>
           <button type="button" onClick={() => { setRiotId("Kami#BR1"); setRegion("br1"); }} className="text-white hover:text-[#CCFF00] transition-colors">KAMI#BR1</button>
         </div>
