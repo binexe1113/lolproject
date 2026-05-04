@@ -19,7 +19,7 @@ function getQueueName(queueId: number | string, gameMode: string) {
   }
 }
 
-export function MatchCard({ match, me, region }: { match: any, me: any, region: string }) {
+export function MatchCard({ match, me, region, patchVersion }: { match: any, me: any, region: string, patchVersion: string }) {
   const [expanded, setExpanded] = useState(false);
   const isWin = me.win;
 
@@ -31,7 +31,7 @@ export function MatchCard({ match, me, region }: { match: any, me: any, region: 
         <div className="flex items-center gap-5">
            <div className={`w-14 h-14 rounded-lg bg-[#05050A] overflow-hidden relative border shadow-lg ${isWin ? 'border-[#CCFF00]/30' : 'border-[#FF0055]/30'}`}>
               <Image 
-                src={`https://ddragon.leagueoflegends.com/cdn/14.5.1/img/champion/${me.championName}.png`} 
+                src={`https://ddragon.leagueoflegends.com/cdn/${patchVersion}/img/champion/${me.championName}.png`} 
                 alt={me.championName} 
                 fill 
                 className="object-cover scale-110" 
@@ -64,7 +64,7 @@ export function MatchCard({ match, me, region }: { match: any, me: any, region: 
                  {match.info.participants.slice(0, 5).map((p: any, i: number) => (
                     <Link key={i} href={`/profile/${region}/${p.riotIdGameName}/${p.riotIdTagline}`} className="flex items-center gap-3 hover:bg-white/5 p-1.5 rounded-lg transition-colors group">
                        <div className={`w-7 h-7 relative rounded border ${p.win ? 'border-[#CCFF00]/40' : 'border-[#FF0055]/40'} overflow-hidden`}>
-                          <Image src={`https://ddragon.leagueoflegends.com/cdn/14.5.1/img/champion/${p.championName}.png`} alt={p.championName} fill className="object-cover scale-110" unoptimized />
+                          <Image src={`https://ddragon.leagueoflegends.com/cdn/${patchVersion}/img/champion/${p.championName}.png`} alt={p.championName} fill className="object-cover scale-110" unoptimized />
                        </div>
                        <span className={`text-sm font-bold truncate tracking-wide ${p.puuid === me.puuid ? 'text-white' : 'text-zinc-400'} group-hover:text-[#CCFF00]`}>
                          {p.riotIdGameName}
@@ -79,7 +79,7 @@ export function MatchCard({ match, me, region }: { match: any, me: any, region: 
                          {p.riotIdGameName}
                        </span>
                        <div className={`w-7 h-7 relative rounded border ${p.win ? 'border-[#CCFF00]/40' : 'border-[#FF0055]/40'} overflow-hidden`}>
-                          <Image src={`https://ddragon.leagueoflegends.com/cdn/14.5.1/img/champion/${p.championName}.png`} alt={p.championName} fill className="object-cover scale-110" unoptimized />
+                          <Image src={`https://ddragon.leagueoflegends.com/cdn/${patchVersion}/img/champion/${p.championName}.png`} alt={p.championName} fill className="object-cover scale-110" unoptimized />
                        </div>
                     </Link>
                  ))}

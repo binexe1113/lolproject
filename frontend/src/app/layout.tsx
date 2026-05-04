@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Syncopate, Space_Grotesk } from 'next/font/google';
+import Link from 'next/link';
 import { InteractiveBackground } from '@/components/InteractiveBackground';
 import './globals.css';
 
@@ -22,19 +23,12 @@ export default function RootLayout({
         <InteractiveBackground />
         <nav className="border-b border-white/5 bg-[#040406]/60 backdrop-blur-xl sticky top-0 z-50">
           <div className="container mx-auto px-6 h-20 flex items-center justify-between">
-            <div className={`flex items-center font-bold text-2xl tracking-tighter cursor-pointer font-[family-name:var(--font-syncopate)] uppercase`}>
+            <Link href="/" className={`flex items-center font-bold text-2xl tracking-tighter cursor-pointer font-[family-name:var(--font-syncopate)] uppercase`}>
               <span className="text-[#CCFF00]">DTM</span>
               <span className="text-white">.gg</span>
-            </div>
+            </Link>
             <div className="hidden md:flex items-center gap-10 text-xs font-bold tracking-[0.2em] uppercase text-zinc-500">
-              <a href="/" className="hover:text-[#CCFF00] transition-colors">Analyzer</a>
-              <a href="#" className="hover:text-[#CCFF00] transition-colors">Meta Data</a>
-              <a href="#" className="hover:text-[#CCFF00] transition-colors">Pro Tracker</a>
-            </div>
-            <div className="hidden md:block">
-               <button className="px-6 py-2 border border-[#CCFF00]/50 text-[#CCFF00] font-bold uppercase tracking-wider text-xs hover:bg-[#CCFF00] hover:text-black transition-all">
-                  Sign In
-               </button>
+              <a href="/" className="hover:text-[#CCFF00] transition-colors">Analyze</a>
             </div>
           </div>
         </nav>

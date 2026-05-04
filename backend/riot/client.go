@@ -4,10 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-<<<<<<< HEAD
 	"strings"
-=======
->>>>>>> origin/master
 	"time"
 )
 
@@ -17,11 +14,16 @@ type Client struct {
 }
 
 func NewClient(apiKey string) *Client {
+	t := http.DefaultTransport.(*http.Transport).Clone()
+	t.MaxIdleConns = 100
+	t.MaxConnsPerHost = 100
+	t.MaxIdleConnsPerHost = 100
+
 	return &Client{
 		apiKey: apiKey,
 		httpClient: &http.Client{
-			// Simple timeout to prevent hanging requests
-			Timeout: 10 * time.Second,
+			Timeout:   10 * time.Second,
+			Transport: t,
 		},
 	}
 }
@@ -138,7 +140,6 @@ func (c *Client) GetMatch(cluster string, matchId string) (*MatchDto, error) {
 
 	return &match, nil
 }
-<<<<<<< HEAD
 
 func (c *Client) GetLeagueEntries(platform string, puuid string) ([]LeagueEntryDto, error) {
 	url := fmt.Sprintf("https://%s.api.riotgames.com/lol/league/v4/entries/by-puuid/%s", platform, puuid)
@@ -239,11 +240,12 @@ func (c *Client) GetApexLadderPosition(platform, tier, queueType string, leagueP
 	case "GRANDMASTER":
 		offset = c.getLeagueSize(platform, "challengerleagues", queue)
 	case "MASTER":
-		offset += c.getLeagueSize(platform, "challengerleagues", queue)
-		offset += c.getLeagueSize(platform, "grandmasterleagues", queue)
+		cSize := make(chan int)
+		gmSize := make(chan int)
+		go func() { cSize <- c.getLeagueSize(platform, "challengerleagues", queue) }()
+		go func() { gmSize <- c.getLeagueSize(platform, "grandmasterleagues", queue) }()
+		offset += <-cSize + <-gmSize
 	}
 
 	return offset + inTierPosition
 }
-=======
->>>>>>> origin/master

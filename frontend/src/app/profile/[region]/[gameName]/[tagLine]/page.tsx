@@ -1,9 +1,6 @@
-import { notFound } from "next/navigation";
 import Image from "next/image";
-<<<<<<< HEAD
 import { MatchCard } from "@/components/MatchCard";
-=======
->>>>>>> origin/master
+import { ProfileTabs } from "@/components/ProfileTabs";
 
 interface ProfilePageProps {
   params: Promise<{
@@ -16,11 +13,7 @@ interface ProfilePageProps {
 async function getProfileData(region: string, gameName: string, tagLine: string) {
   try {
     const res = await fetch(`http://localhost:8080/api/summoner/${region}/${gameName}/${tagLine}`, {
-<<<<<<< HEAD
       cache: "no-store"
-=======
-      next: { revalidate: 60 }
->>>>>>> origin/master
     });
     if (!res.ok) return null;
     return res.json();
@@ -32,11 +25,7 @@ async function getProfileData(region: string, gameName: string, tagLine: string)
 async function getMatchHistory(region: string, gameName: string, tagLine: string) {
   try {
     const res = await fetch(`http://localhost:8080/api/summoner/${region}/${gameName}/${tagLine}/matches`, {
-<<<<<<< HEAD
       cache: "no-store"
-=======
-      next: { revalidate: 60 }
->>>>>>> origin/master
     });
     if (!res.ok) return [];
     return res.json();
@@ -45,16 +34,25 @@ async function getMatchHistory(region: string, gameName: string, tagLine: string
   }
 }
 
+async function getLatestPatch() {
+  try {
+    const res = await fetch("https://ddragon.leagueoflegends.com/api/versions.json", {
+      next: { revalidate: 3600 }
+    });
+    const versions = await res.json();
+    return versions[0] || "15.5.1";
+  } catch (error) {
+    return "15.5.1";
+  }
+}
+
 export default async function ProfilePage({ params }: ProfilePageProps) {
   const resolvedParams = await params;
   
-<<<<<<< HEAD
-=======
-  // Fetch both profile and matches in parallel for speed
->>>>>>> origin/master
-  const [data, matchesData] = await Promise.all([
+  const [data, matchesData, patchVersion] = await Promise.all([
     getProfileData(resolvedParams.region, resolvedParams.gameName, resolvedParams.tagLine),
-    getMatchHistory(resolvedParams.region, resolvedParams.gameName, resolvedParams.tagLine)
+    getMatchHistory(resolvedParams.region, resolvedParams.gameName, resolvedParams.tagLine),
+    getLatestPatch()
   ]);
   
   if (!data) {
@@ -72,9 +70,8 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
     );
   }
 
-<<<<<<< HEAD
   const { account, summoner, league, ladderPosition } = data;
-  const iconUrl = `https://ddragon.leagueoflegends.com/cdn/14.5.1/img/profileicon/${summoner.profileIconId}.png`;
+  const iconUrl = `https://ddragon.leagueoflegends.com/cdn/${patchVersion}/img/profileicon/${summoner.profileIconId}.png`;
   const soloQueue = league?.find((l: any) => l.queueType === "RANKED_SOLO_5x5");
 
   const APEX_TIERS = ["MASTER", "GRANDMASTER", "CHALLENGER"];
@@ -85,16 +82,36 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
       : `${soloQueue.tier} ${soloQueue.rank}`
     : "Unranked";
 
-  return (
-    <div className="container mx-auto px-4 py-8 max-w-6xl">
-=======
-  const { account, summoner } = data;
-  const iconUrl = `https://ddragon.leagueoflegends.com/cdn/14.5.1/img/profileicon/${summoner.profileIconId}.png`;
+  let wr = 0;
+  let wrColor = "text-white";
+  if (soloQueue) {
+    wr = (soloQueue.wins / ((soloQueue.wins + soloQueue.losses) || 1)) * 100;
+    if (wr > 55) wrColor = "text-[#CCFF00]";
+    else if (wr < 45) wrColor = "text-[#FF0055]";
+  }
+
+  // Compute Top Champions
+  const champStats: Record<string, { name: string, games: number, wins: number, kills: number, deaths: number, assists: number }> = {};
+  if (matchesData && matchesData.length > 0) {
+    matchesData.forEach((match: any) => {
+      const me = match.info.participants.find((p: any) => p.puuid === account.puuid) || match.info.participants[0];
+      if (!champStats[me.championId]) {
+        champStats[me.championId] = { name: me.championName, games: 0, wins: 0, kills: 0, deaths: 0, assists: 0 };
+      }
+      const st = champStats[me.championId];
+      st.games++;
+      if (me.win) st.wins++;
+      st.kills += me.kills;
+      st.deaths += me.deaths;
+      st.assists += me.assists;
+    });
+  }
+  const topChamps = Object.values(champStats)
+    .sort((a, b) => b.games - a.games || (b.wins/b.games) - (a.wins/a.games))
+    .slice(0, 3);
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-6xl">
-      {/* Profile Header */}
->>>>>>> origin/master
       <div className="relative overflow-hidden rounded-[2rem] glass-panel p-8 md:p-12 mb-8 group">
         <div className="absolute inset-0 bg-gradient-to-r from-[#00E5FF]/5 to-[#7B2CBF]/5 pointer-events-none"></div>
         <div className="absolute -top-32 -right-32 w-96 h-96 bg-[#CCFF00]/10 rounded-full blur-[120px] pointer-events-none mix-blend-screen"></div>
@@ -114,7 +131,6 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
               {account.gameName}
               <span className="text-3xl text-zinc-600 font-bold tracking-normal">#{account.tagLine}</span>
             </h1>
-<<<<<<< HEAD
             <div className="flex items-center justify-center md:justify-start gap-3 mt-4 mb-2">
                {soloQueue && (
                   <span className="px-5 py-1.5 rounded-xl bg-[#CCFF00] text-black text-sm font-black border border-[#CCFF00]/50 uppercase tracking-widest">
@@ -124,108 +140,106 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
                <span className="px-5 py-1.5 rounded-xl bg-[#7000FF]/10 text-[#7000FF] text-sm font-bold border border-[#7000FF]/20 uppercase tracking-widest">
                   ZONE: {resolvedParams.region}
                </span>
-=======
-            <div className="flex items-center justify-center md:justify-start gap-3 mt-4">
-               <span className="px-5 py-1.5 rounded-xl bg-[#CCFF00]/10 text-[#CCFF00] text-sm font-bold border border-[#CCFF00]/20 uppercase tracking-widest shadow-[inset_0_0_10px_rgba(204,255,0,0.05)]">
-                  ZONE: {resolvedParams.region}
-               </span>
-               <span className="px-5 py-1.5 rounded-xl bg-[#7000FF]/10 text-[#7000FF] text-sm font-bold border border-[#7000FF]/20 uppercase tracking-widest">
-                  Ladder Rank
-               </span>
->>>>>>> origin/master
             </div>
           </div>
         </div>
       </div>
 
-<<<<<<< HEAD
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="glass-panel border-[#7000FF]/30 rounded-[2rem] p-8 shadow-lg flex flex-col items-center justify-center relative overflow-hidden group h-64 sticky top-24">
-            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#7000FF] to-transparent opacity-50"></div>
-            <div className="absolute inset-0 bg-gradient-to-br from-[#7000FF]/10 to-transparent"></div>
-            <h3 className="text-zinc-400 font-bold tracking-widest uppercase text-sm mb-3 relative z-10">Ranqueada Solo/Duo</h3>
-            <div className="text-4xl xl:text-5xl font-black text-white relative z-10 drop-shadow-md text-center capitalize mt-4">
-              {rankLabel}
+        <div className="flex flex-col gap-6 sticky top-24 self-start">
+          <div className="glass-panel border-[#7000FF]/30 rounded-[2rem] p-8 shadow-lg flex flex-col items-center justify-center relative overflow-hidden group min-h-[16rem]">
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#7000FF] to-transparent opacity-50"></div>
+              <div className="absolute inset-0 bg-gradient-to-br from-[#7000FF]/10 to-transparent"></div>
+              <h3 className="text-zinc-400 font-bold tracking-widest uppercase text-sm mb-2 relative z-10">Ranqueada Solo/Duo</h3>
+
+              {soloQueue && (
+                 <div className="relative w-32 h-32 mt-2 mb-2 z-10 drop-shadow-xl hover:scale-105 transition-transform duration-500">
+                   <Image 
+                     src={`https://opgg-static.akamaized.net/images/medals_new/${soloQueue.tier.toLowerCase()}.png`} 
+                     alt={soloQueue.tier} 
+                     fill 
+                     className="object-contain drop-shadow-[0_0_15px_rgba(112,0,255,0.4)]" 
+                     unoptimized 
+                   />
+                 </div>
+              )}
+              
+              <div className="text-3xl xl:text-4xl font-black text-white relative z-10 drop-shadow-md text-center capitalize">
+                {rankLabel}
+              </div>
+              
+              {soloQueue ? (
+                 <div className="flex flex-col items-center mt-2 w-full">
+                   <p className="text-2xl text-[#CCFF00] relative z-10 font-black uppercase tracking-wider text-center shadow-[#CCFF00]/50 drop-shadow-lg">
+                     {soloQueue.leaguePoints} LP
+                   </p>
+                   {isApex && ladderPosition > 0 && (
+                     <p className="text-sm text-zinc-300 mt-1 relative z-10 font-bold uppercase tracking-wider text-center">
+                       Rank #{ladderPosition}
+                     </p>
+                   )}
+                   <div className="mt-4 pt-4 border-t border-white/10 w-full flex flex-col items-center justify-center relative z-10 mt-4 relative z-10 font-bold uppercase tracking-wider text-center">
+                     <p className="text-sm text-zinc-400 mb-1">
+                       {soloQueue.wins}W / {soloQueue.losses}L
+                     </p>
+                     <p className={`text-lg font-black ${wrColor}`}>
+                       {wr.toFixed(1)}% WR
+                     </p>
+                   </div>
+                 </div>
+              ) : (
+                 <p className="text-sm text-zinc-500 mt-4 relative z-10 font-bold uppercase tracking-wider text-center">
+                   Aguardando Flex / MD5
+                 </p>
+              )}
+          </div>
+
+          <div className="glass-panel border-white/5 rounded-[2rem] p-6 shadow-lg flex flex-col items-start relative overflow-hidden group">
+            <h3 className="text-zinc-400 font-bold tracking-widest uppercase text-sm mb-4 relative z-10 w-full border-b border-white/5 pb-3">Campeões Mais Jogados</h3>
+            <div className="w-full flex flex-col gap-3 relative z-10">
+              {topChamps.length > 0 ? topChamps.map((c, i) => {
+                const champWr = (c.wins / c.games) * 100;
+                let cColor = "text-white";
+                if (champWr > 55) cColor = "text-[#CCFF00]";
+                else if (champWr < 45) cColor = "text-[#FF0055]";
+                const kda = ((c.kills + c.assists) / (c.deaths || 1)).toFixed(2);
+                
+                return (
+                  <div key={i} className="flex items-center gap-3 bg-black/40 border border-white/5 p-3 rounded-xl">
+                    <div className="w-10 h-10 rounded-lg overflow-hidden relative border border-white/10 shrink-0">
+                      <Image 
+                        src={`https://ddragon.leagueoflegends.com/cdn/${patchVersion}/img/champion/${c.name}.png`} 
+                        alt={c.name} 
+                        fill 
+                        className="object-cover scale-110" 
+                        unoptimized
+                      />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex justify-between items-baseline mb-1">
+                        <p className="font-bold text-white text-sm truncate">{c.name}</p>
+                        <p className={`font-black text-sm ${cColor}`}>{champWr.toFixed(0)}%</p>
+                      </div>
+                      <div className="flex justify-between items-center text-xs text-zinc-500 font-bold uppercase">
+                        <span>{c.games} Play{c.games !== 1 ? 's' : ''}</span>
+                        <span>{kda} KDA</span>
+                      </div>
+                    </div>
+                  </div>
+                )
+              }) : (
+                <div className="text-center py-4 text-zinc-600 text-xs font-bold uppercase">Sem dados suficientes</div>
+              )}
             </div>
-            
-            {soloQueue ? (
-               <div className="flex flex-col items-center">
-                 <p className="text-2xl text-[#CCFF00] mt-2 relative z-10 font-black uppercase tracking-wider text-center shadow-[#CCFF00]/50 drop-shadow-lg">
-                   {isApex && ladderPosition > 0 ? `#${ladderPosition}` : `${soloQueue.leaguePoints} LP`}
-                 </p>
-                 <p className="text-xs text-zinc-500 mt-4 relative z-10 font-bold uppercase tracking-wider text-center">
-                   {soloQueue.wins}W / {soloQueue.losses}L - <span className="text-[#CCFF00]">{(soloQueue.wins / ((soloQueue.wins + soloQueue.losses) || 1) * 100).toFixed(1)}%</span> WR
-                 </p>
-               </div>
-            ) : (
-               <p className="text-sm text-zinc-500 mt-2 relative z-10 font-bold uppercase tracking-wider text-center">
-                 Aguardando Flex / MD5
-               </p>
-            )}
-=======
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="glass-panel border-[#7000FF]/30 rounded-[2rem] p-8 shadow-lg flex flex-col items-center justify-center relative overflow-hidden group">
-            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-[#7000FF] to-transparent opacity-50"></div>
-            <div className="absolute inset-0 bg-gradient-to-br from-[#7000FF]/10 to-transparent"></div>
-            <h3 className="text-zinc-400 font-bold tracking-widest uppercase text-sm mb-3 relative z-10">Ranqueada Solo/Duo</h3>
-            <div className="text-5xl font-black text-white relative z-10 drop-shadow-md">Unranked</div>
-            <p className="text-sm text-zinc-500 mt-3 relative z-10 font-bold uppercase tracking-wider">Calibrando...</p>
->>>>>>> origin/master
+          </div>
         </div>
         
-        <div className="glass-panel border-white/5 rounded-[2rem] p-8 md:col-span-2 relative overflow-hidden group flex flex-col items-start justify-start">
-            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-white to-transparent opacity-10"></div>
-<<<<<<< HEAD
-            <h3 className="text-zinc-400 font-bold tracking-widest uppercase text-sm mb-6 relative z-10 w-full border-b border-white/5 pb-4">Últimas Batalhas</h3>
-=======
-            <h3 className="text-zinc-400 font-bold tracking-widest uppercase text-sm mb-6 relative z-10 w-full border-b border-white/5 pb-4">Últimas 5 Batalhas</h3>
->>>>>>> origin/master
-            
-            <div className="relative z-10 w-full h-full flex flex-col gap-3">
-               {!matchesData || matchesData.length === 0 ? (
-                 <div className="w-full h-32 rounded-2xl border border-white/5 bg-black/40 flex items-center justify-center">
-                    <p className="text-zinc-500 font-bold uppercase tracking-wider text-sm">Nenhum registro de combate recente.</p>
-                 </div>
-               ) : (
-                 matchesData.map((match: any, index: number) => {
-<<<<<<< HEAD
-                   const me = match.info.participants.find((p: any) => p.puuid === account.puuid) || match.info.participants[0];
-                   return <MatchCard key={index} match={match} me={me} region={resolvedParams.region} />;
-=======
-                   const me = match.info.participants.find((p: any) => p.puuid === data.account.puuid) || match.info.participants[0];
-                   const isWin = me.win;
-                   
-                   return (
-                     <div key={index} className={`relative flex items-center justify-between p-4 rounded-xl border transition-all hover:scale-[1.01] ${isWin ? 'border-[#CCFF00]/30 bg-[#CCFF00]/10 shadow-[inset_0_0_20px_rgba(204,255,0,0.05)]' : 'border-[#FF0055]/30 bg-[#FF0055]/5 shadow-[inset_0_0_20px_rgba(255,0,85,0.05)]'}`}>
-                        <div className="flex items-center gap-5">
-                           <div className="w-14 h-14 rounded-lg bg-[#05050A] overflow-hidden relative border border-white/10 shadow-lg">
-                              <Image 
-                                src={`https://ddragon.leagueoflegends.com/cdn/14.5.1/img/champion/${me.championName}.png`} 
-                                alt={me.championName} 
-                                fill 
-                                className="object-cover scale-110" 
-                                unoptimized
-                              />
-                           </div>
-                           <div className="flex flex-col">
-                              <span className={`font-black uppercase tracking-widest text-lg ${isWin ? 'text-[#CCFF00]' : 'text-[#FF0055]'}`}>
-                                {isWin ? "VICTORY" : "DEFEAT"}
-                              </span>
-                              <span className="text-white font-bold tracking-wider">{me.kills} / <span className="text-zinc-500">{me.deaths}</span> / {me.assists}</span>
-                           </div>
-                        </div>
-                        <div className="hidden sm:flex flex-col items-end">
-                           <span className="text-zinc-400 text-xs font-bold uppercase tracking-widest">{match.info.gameMode}</span>
-                           <span className="text-white font-black text-lg">CS: {me.totalMinionsKilled || 0}</span>
-                        </div>
-                     </div>
-                   );
->>>>>>> origin/master
-                 })
-               )}
-            </div>
-        </div>
+        <ProfileTabs 
+          matchesData={matchesData} 
+          accountPuuid={account.puuid} 
+          region={resolvedParams.region} 
+          patchVersion={patchVersion}
+        />
       </div>
     </div>
   );

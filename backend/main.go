@@ -70,7 +70,6 @@ func main() {
 			return
 		}
 
-<<<<<<< HEAD
 		league, _ := riotClient.GetLeagueEntries(platform, account.Puuid)
 
 		// For apex tiers, compute the real ladder position by fetching the full league list
@@ -88,11 +87,6 @@ func main() {
 			"summoner":       summoner,
 			"league":         league,
 			"ladderPosition": ladderPosition,
-=======
-		c.JSON(http.StatusOK, gin.H{
-			"account":  account,
-			"summoner": summoner,
->>>>>>> origin/master
 		})
 	})
 
@@ -116,8 +110,8 @@ func main() {
 			return
 		}
 
-		// Fetch last 5 matches initially to prevent blowing rate limit with parallel requests
-		matchIds, err := riotClient.GetMatchIdsByPUUID(cluster, account.Puuid, 5)
+		// Fetch last 15 matches to generate decent top champion statistics
+		matchIds, err := riotClient.GetMatchIdsByPUUID(cluster, account.Puuid, 15)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch match list"})
 			return
