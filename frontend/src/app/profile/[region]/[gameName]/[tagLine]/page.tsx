@@ -11,8 +11,9 @@ interface ProfilePageProps {
 }
 
 async function getProfileData(region: string, gameName: string, tagLine: string) {
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
   try {
-    const res = await fetch(`http://localhost:8080/api/summoner/${region}/${gameName}/${tagLine}`, {
+    const res = await fetch(`${baseUrl}/api/summoner/${region}/${gameName}/${tagLine}`, {
       cache: "no-store"
     });
     if (!res.ok) return null;
@@ -23,8 +24,9 @@ async function getProfileData(region: string, gameName: string, tagLine: string)
 }
 
 async function getMatchHistory(region: string, gameName: string, tagLine: string) {
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
   try {
-    const res = await fetch(`http://localhost:8080/api/summoner/${region}/${gameName}/${tagLine}/matches`, {
+    const res = await fetch(`${baseUrl}/api/summoner/${region}/${gameName}/${tagLine}/matches`, {
       cache: "no-store"
     });
     if (!res.ok) return [];
